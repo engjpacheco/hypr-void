@@ -16,14 +16,14 @@ doas xbps-install dbus seatd polkit elogind mesa-dri kitty
 ** void-packages
 #+begin_src shell :tangle hypr-void.sh
 cd $HOME
-mkdir -p .local/src/
+[ -d $HOME/.local/src/ ] && echo "~/.local/src/ folder exits in the system." || mkdir -p $HOME/.local/src/
 cd .local/src
 git clone https://github.com/void-linux/void-packages --depth 1
 #+end_src
 
 ** Third party hyprland-void sources.
 #+begin_src shell :tangle hypr-void.sh
-git clone https://github.com/Makrennel/hyprland-void
+git clone https://github.com/Makrennel/hyprland-void --depth 1
 #+end_src
 
 * Building xbps-src.
