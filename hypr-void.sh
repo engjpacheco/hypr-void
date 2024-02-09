@@ -1,11 +1,3 @@
-#+TITLE: Install Hyprland in voidlinux.
-#+AUTHOR: Javier Pacheco
-#+DESCRIPTION: Script that install hyprland in voidlinux
-#+OPTIONS: toc:nil date:nil 
-
-
-* Install needed packages and avoid issues with ssl.
-#+begin_src shell :tangle hypr-void.sh
 #!/bin/sh
 
 # Created By: Javier Pacheco - javier@jpacheco.xyz
@@ -13,37 +5,21 @@
 # Project: Script that install hyprland in voidlinux
 
 doas xbps-install dbus seatd polkit elogind mesa-dri kitty
-#+end_src
 
-* Cloning the needed repositories:
-** void-packages
-#+begin_src shell :tangle hypr-void.sh
 cd $HOME
 [ -d $HOME/.local/src/ ] && echo "~/.local/src/ folder exits in the system." || mkdir -p $HOME/.local/src/
 cd $HOME/.local/src
 git clone https://github.com/void-linux/void-packages --depth 1
-#+end_src
 
-** Third party hyprland-void sources.
-#+begin_src shell :tangle hypr-void.sh
 git clone https://github.com/Makrennel/hyprland-void --depth 1
-#+end_src
 
-* Building xbps-src.
-#+begin_src shell :tangle hypr-void.sh
 cd void-packages
-./xbps-src binary-bootstrap 
-#+end_src
+./xbps-src binary-bootstrap
 
-* Append shared libraries to void-packages
-#+begin_src shell :tangle hypr-void.sh
 cd ../hyprland-void
 cat common/shlibs >> ../void-packages/common/shlibs
 cp -r srcpkgs/* ../void-packages/srcpkgs
-#+end_src
 
-* Build and install the packages:
-#+begin_src shell :tangle hypr-void.sh
 cd ../void-packages
 ./xbps-src pkg hyprland
 ./xbps-src pkg xdg-desktop-portal-hyprland
@@ -51,24 +27,13 @@ cd ../void-packages
 doas xbps-install -R hostdir/binpkgs hyprland
 doas xbps-install -R hostdir/binpkgs hyprland-protocols
 doas xbps-install -R hostdir/binpkgs xdg-desktop-portal-hyprland
-#+end_src
 
-* Enable services.
-#+begin_src shell :tangle hypr-void.sh
 doas ln -s /etc/sv/dbus /var/service
 doas ln -s /etc/sv/polkitd /var/service
 doas ln -s /etc/sv/seatd /var/service
-#+end_src
 
-* Add user to =seatd= group.
-#+begin_src shell :tangle hypr-void.sh
 doas usermod -aG _seatd $USER
-#+end_src
 
-* Clean folders when finish the installation.
-#+BEGIN_SRC shell :tangle hypr-void.sh
 rm -rf ./local/src/void-packages
 rm -rf ./local/src/hyprland-void
 echo "Folders was removed from this device."
-
-#+END_SRC
